@@ -16,44 +16,67 @@ Although the United States is not a tropical region, extreme weather events such
 
 ## Method
 ### Sample
-The sample included N = 166,048 records from the dataset containing information about extreme weather events that impacted agricultural crops in the United States, spanning from January 2013 to October 2015. All records were related to significant weather events that affected crop yields, including hurricanes, tornadoes, floods, droughts, and other extreme weather phenomena.
+1. Population:
+The population for this study includes extreme weather events recorded in the United States that have impacted agricultural crops. These events range from hurricanes, tornadoes, floods, droughts, hail, high winds, lightning, and other meteorological phenomena that could cause crop damage. The dataset spans from January 2013 to October 2015
+
+2. Sample Selection Criteria:
+The sample includes records from the dataset related to events that resulted in significant damage to crops. This selection was made to focus specifically on weather events that had a notable economic impact, measured by crop loss in monetary value or percentage of yield loss. Random sampling was used to select 10% of the data (N=16,600 records) to ensure a representative subset of the population. This sample represents various types of weather events, states, and crop damage levels.
+
+3. Sample Size:
+The sample size is 16,600 records, which accounts for 10% of the total dataset consisting of 166,000 records.
+
+4. Sample Description:
+The sample includes a variety of weather events from multiple states in the United States, each with varying levels of severity. The data includes:
+
+- Event Type: Including hurricanes, floods, tornadoes, etc.
+
+- Location: Events from different regions and states are included.
+
+- Crop Damage: Ranging from low to high damage, measured in monetary value or percentage of yield loss.
+
+- Other Meteorological Conditions: Includes precipitation, temperature extremes, wind speed, and other factors associated with weather events.
 
 ### Measures
-The response variable of interest is the crop damage measured in monetary value or percentage of crop loss for each weather event. This was calculated from official damage reports available in the dataset.
+.1 Description of Variables:
 
-Predictor variables include:
+Response Variable:
 
-1. Event Type: Categorical variable representing the type of extreme weather event (e.g., hurricane, tornado, flood, etc.).
+- Crop Damage: The dependent variable representing the monetary value or percentage of crop loss as a result of the extreme weather event.
 
-2. Event Magnitude: Continuous variable indicating the severity of the weather event (e.g., wind speed, rainfall amount).
+Predictor Variables:
 
-3. Temperature Extremes: Continuous variable representing the deviation in temperature during the event (e.g., high temperatures, low temperatures).
+- Event Type: Categorical variable representing the type of extreme weather (e.g., hurricane, tornado, flood).
 
-4. Location: Categorical variable indicating the state or region affected by the weather event.
+- Event Magnitude: Continuous variable indicating the severity of the weather event (e.g., wind speed, rainfall amount).
 
-5. Precipitation: Continuous variable representing the amount of precipitation recorded during the event.
+- Temperature Extremes: Continuous variable representing temperature deviation during the event.
 
-6. Wind Speed: Continuous variable representing the highest wind speed recorded during the event.
+- Precipitation: Continuous variable representing the amount of precipitation recorded during the event.
 
-7. Other Meteorological Conditions: Additional relevant weather factors such as lightning, hail, snow, etc.
+- Wind Speed: Continuous variable representing the highest wind speed during the event.
+
+- Location (State): Categorical variable indicating the state or region affected by the weather event.
+
+2. Managing the Variables:
+
+- Categorical Variables: Variables like Event Type and Location were encoded using dummy variables for inclusion in the analysis.
+
+- Continuous Variables: All continuous variables (e.g., Event Magnitude, Precipitation, Wind Speed) were standardized to have a mean of 0 and standard deviation of 1 to ensure comparability.
+
+- Creation of New Variables: For modeling purposes, new composite variables or binned versions of continuous variables were not created, as the focus was on analyzing the original variables' relationship to crop damage.
 
 ### Analyses
-The distributions for the predictors and the response variable (crop damage) were examined by evaluating frequency tables for categorical variables and calculating the mean, standard deviation, and minimum and maximum values for quantitative variables.
+1. Statistical Methods:
+The analysis focuses on identifying the best predictors for crop damage using various statistical techniques:
 
-#### Exploratory Data Analysis (EDA):
+- Exploratory Data Analysis (EDA): Involves examining the distributions of the variables and identifying potential relationships using scatter plots, box plots, and correlation matrices.
 
-- Scatter plots, box plots, and correlation matrices were used to visually inspect relationships between predictors and the response variable.
+- Pearson Correlation: To identify linear relationships between continuous predictor variables and crop damage.
 
-- Pearson correlation was used to identify linear relationships between continuous predictor variables and crop damage.
+- Lasso Regression: A method for variable selection, used to identify a subset of predictors that best explain crop damage while preventing overfitting.
 
-#### Random Sampling:
-To efficiently explore the data, a random sample was drawn from the dataset, comprising 10% of the total data (N=16,600) to facilitate quicker exploratory analysis. The sample was selected randomly to ensure that it accurately represented the diversity of events and locations.
+2. Data Splitting:
+The dataset will be split into training and test datasets. The training dataset will consist of 60% of the data (N=9,960 records), and the test dataset will include the remaining 40% (N=6,640 records). The training dataset will be used to fit the lasso regression model, while the test dataset will be used to evaluate the predictive accuracy of the model.
 
-#### Lasso Regression:
-To identify the most significant predictors of crop damage, lasso regression was used with the least angle regression selection algorithm. The model was estimated on a training dataset consisting of 60% of the random sample (N=9,960), while the remaining 40% (N=6,640) was used as the test dataset. All predictor variables were standardized to have a mean of 0 and a standard deviation of 1 before conducting the lasso regression analysis.
-
-#### Cross-validation:
-10-fold cross-validation was performed to assess model stability and prevent overfitting. The change in the cross-validation mean squared error (MSE) was used to identify the optimal subset of predictor variables that best explained crop damage.
-
-#### Predictive Accuracy:
-The mean squared error (MSE) of the predictive model was calculated by applying the model trained on the training dataset to the test dataset. This metric was used to evaluate the predictive accuracy of the model.
+3. Cross-Validation:
+10-fold cross-validation will be used to assess model stability and performance. This technique will divide the training dataset into 10 subsets, training the model on 9 subsets and testing on the remaining 1 subset, rotating this process to ensure each subset is used for validation. The cross-validation mean squared error (MSE) will be calculated at each step to identify the best subset of predictor variables.
