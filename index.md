@@ -1,36 +1,17 @@
 ---
-title: "My Coursera Project Blog"
-author: yourusername
+title: "Data Analysis and Interpretation Capstone Coursera"
+author: rama
 date: 2025-05-02
 ---
 
-# 📘 My Coursera Project: Predicting Exercise Form with Machine Learning
+# Predicting Crop Loss from Storm Events
 
-Welcome to my project blog! In this post, I will walk through my experience with the Coursera project on...
+## 🔍 Introduction to Research Question
 
-## 🔍 Problem Statement
+This study aims to identify the most significant predictors of crop loss caused by various storm-related events, including hurricanes, tornadoes, thunderstorms, hail, floods, droughts, lightning, high winds, snow, extreme temperatures, and other extreme weather conditions.
 
-The goal of the project was to...
+Farmers are the backbone of the economy in many tropical countries. Given their crucial role, it's essential to address the challenges they face—one of the most pressing being their vulnerability to extreme weather events. These conditions can cause significant crop losses, jeopardizing both their livelihoods and national food security.
 
-## 🛠️ Tools and Technologies
+As a data engineer, I see it as a responsibility to leverage data and analytics to develop solutions that can help mitigate the impact of these disasters. By understanding the patterns and predictors behind crop loss, we can inform better preparation strategies and policy decisions.
 
-- Python
-- Scikit-learn
-- Pandas
-- Git/GitHub
-
-## 📊 Methodology
-
-I used a decision tree classifier and cross-validation to...
-
-## 📈 Results
-
-The model achieved an accuracy of...
-
-## 🔚 Conclusion
-
-This project taught me...
-
----
-
-Thanks for reading!
+By addressing these challenges through data-driven insights, farmers will be better equipped to maintain stable crop production and continue supporting the economy of tropical regions.
