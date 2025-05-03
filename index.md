@@ -6,77 +6,139 @@ date: 2025-05-02
 
 # Predicting Crop Loss from Storm Events
 
-## 🔍 Introduction to Research Question
+---
 
-This study aims to identify the most significant factors that contribute to crop loss resulting from extreme weather events across the United States. Using historical storm data, we explore how different types of weather events—such as hurricanes, tornadoes, hail, floods, droughts, lightning, high winds, snow, and extreme temperatures—affect agricultural outcomes.
+## Introduction to the Research Question
 
-The dataset includes key information such as event type, magnitude, geographic location, storm category, and associated damages, including both property and crop loss. The target variable for this study is DAMAGE_CROPS, representing the estimated financial impact of storms on agricultural output. Key features include EVENT_TYPE, MAGNITUDE, FLOOD_CAUSE, CATEGORY, TOR_F_SCALE, STATE, YEAR, and geographical coordinates.
+This study aims to identify the most significant factors contributing to crop loss caused by extreme weather events across the United States. Using historical storm data, we examine how various event types—including hurricanes, tornadoes, hail, floods, droughts, lightning, high winds, snow, and extreme temperatures—impact agricultural outcomes.
 
-Although the United States is not a tropical region, extreme weather events such as tornadoes, hurricanes, and blizzards still pose significant risks to agriculture, particularly in the midwestern and southern states. As a data engineer, I believe it’s essential to harness data and predictive modeling to mitigate these risks and enhance food security. By analyzing historical storm events and their impact on crops, this study seeks to provide valuable insights to help farmers and policymakers make more informed decisions.
+The dataset contains critical information such as event type, magnitude, geographic location, storm category, and reported damages to both property and crops. The target variable, `DAMAGE_CROPS`, represents the estimated financial impact of storms on agricultural production. Key features include `EVENT_TYPE`, `MAGNITUDE`, `FLOOD_CAUSE`, `CATEGORY`, `TOR_F_SCALE`, `STATE`, `YEAR`, and geographical coordinates.
+
+While the United States is not a tropical country, severe weather events—especially in the Midwest and Southern regions—pose significant threats to agriculture. This research leverages data-driven modeling to help mitigate these risks and inform future food security efforts.
+
+---
 
 ## Method
+
 ### Sample
-1. Population:
-The population for this study includes extreme weather events recorded in the United States that have impacted agricultural crops. These events range from hurricanes, tornadoes, floods, droughts, hail, high winds, lightning, and other meteorological phenomena that could cause crop damage. The dataset spans from January 2013 to October 2015
 
-2. Sample Selection Criteria:
-The sample includes records from the dataset related to events that resulted in significant damage to crops. This selection was made to focus specifically on weather events that had a notable economic impact, measured by crop loss in monetary value or percentage of yield loss. Random sampling was used to select 10% of the data (N=16,600 records) to ensure a representative subset of the population. This sample represents various types of weather events, states, and crop damage levels.
+**Population**  
+The population includes all recorded extreme weather events in the United States between January 2013 and October 2015 that impacted agriculture, particularly those causing crop damage.
 
-3. Sample Size:
-The sample size is 16,600 records, which accounts for 10% of the total dataset consisting of 166,000 records.
+**Sample Selection Criteria**  
+The data were filtered to retain only events with complete records on crop damage, magnitude, and geographic location (latitude and longitude) to ensure analytical accuracy and statistical validity.
 
-4. Sample Description:
-The sample includes a variety of weather events from multiple states in the United States, each with varying levels of severity. The data includes:
+**Sample Size**  
+After cleaning and filtering, a total of 59,161 observations were retained for analysis. These reflect diverse extreme weather events and affected regions across the U.S.
 
-- Event Type: Including hurricanes, floods, tornadoes, etc.
+**Sample Description**  
+The dataset includes:
+- `EVENT_TYPE`: Type of event (e.g., storm, tornado, flood)
+- `MAGNITUDE`: Intensity of the event (e.g., wind speed, rainfall)
+- `BEGIN_LAT` / `BEGIN_LON`: Geographical coordinates of the event
+- `DAMAGE_CROPS`: Monetary value of crop damage (log-transformed for modeling)
 
-- Location: Events from different regions and states are included.
+---
 
-- Crop Damage: Ranging from low to high damage, measured in monetary value or percentage of yield loss.
+## Measures
 
-- Other Meteorological Conditions: Includes precipitation, temperature extremes, wind speed, and other factors associated with weather events.
+**Response Variable**
+- **Crop Damage (`DAMAGE_CROPS`)**: Financial impact of storm events on crops, transformed using `log(1 + x)` to address right-skewness and zero inflation.
 
-### Measures
-.1 Description of Variables:
+**Predictor Variables**
+- `MAGNITUDE`: Numeric intensity of the event
+- `BEGIN_LAT`: Latitude
+- `BEGIN_LON`: Longitude
 
-Response Variable:
+Additional variables like `EVENT_TYPE`, `STATE`, and `CATEGORY` will be considered in extended models (e.g., Lasso regression).
 
-- Crop Damage: The dependent variable representing the monetary value or percentage of crop loss as a result of the extreme weather event.
+---
 
-Predictor Variables:
+## Data Preprocessing
 
-- Event Type: Categorical variable representing the type of extreme weather (e.g., hurricane, tornado, flood).
+- Converted non-numeric `DAMAGE_CROPS` values into numeric by stripping symbols and characters.
+- Removed rows with missing values in key variables.
+- Applied logarithmic transformation (`log1p`) to reduce skewness in crop damage.
 
-- Event Magnitude: Continuous variable indicating the severity of the weather event (e.g., wind speed, rainfall amount).
+---
 
-- Temperature Extremes: Continuous variable representing temperature deviation during the event.
+## Analyses
 
-- Precipitation: Continuous variable representing the amount of precipitation recorded during the event.
+### Exploratory Data Analysis (EDA)
 
-- Wind Speed: Continuous variable representing the highest wind speed during the event.
+The distribution of crop damage is highly skewed, with:
+- **Mean (log damage)**: 0.2417  
+- **Median**: 0.0000  
+- **Maximum**: 18.42  
 
-- Location (State): Categorical variable indicating the state or region affected by the weather event.
+A large number of events resulted in no reported crop damage. Scatter plots and correlations showed weak relationships between `MAGNITUDE` and `LOG_DAMAGE_CROPS`.
 
-2. Managing the Variables:
+### Modeling Approach
 
-- Categorical Variables: Variables like Event Type and Location were encoded using dummy variables for inclusion in the analysis.
+A baseline multiple linear regression was performed using:
+- **Predictors**: `MAGNITUDE`, `BEGIN_LAT`, `BEGIN_LON`  
+- **Results**:
+  - All predictors were statistically significant (*p* < 0.05)
+  - Adjusted R-squared = 0.005 (explaining only 0.5% of variance)
 
-- Continuous Variables: All continuous variables (e.g., Event Magnitude, Precipitation, Wind Speed) were standardized to have a mean of 0 and standard deviation of 1 to ensure comparability.
+### Model Evaluation
 
-- Creation of New Variables: For modeling purposes, new composite variables or binned versions of continuous variables were not created, as the focus was on analyzing the original variables' relationship to crop damage.
+- **RMSE**: 1.4965  
+- **MSE (Test Set)**: 2.2397  
+- **R-squared (Test Set)**: 0.005  
 
-### Analyses
-1. Statistical Methods:
-The analysis focuses on identifying the best predictors for crop damage using various statistical techniques:
+These metrics indicate the baseline model performs poorly in predicting crop damage.
 
-- Exploratory Data Analysis (EDA): Involves examining the distributions of the variables and identifying potential relationships using scatter plots, box plots, and correlation matrices.
+---
 
-- Pearson Correlation: To identify linear relationships between continuous predictor variables and crop damage.
+## Discussion
 
-- Lasso Regression: A method for variable selection, used to identify a subset of predictors that best explain crop damage while preventing overfitting.
+### Descriptive Statistics
 
-2. Data Splitting:
-The dataset will be split into training and test datasets. The training dataset will consist of 60% of the data (N=9,960 records), and the test dataset will include the remaining 40% (N=6,640 records). The training dataset will be used to fit the lasso regression model, while the test dataset will be used to evaluate the predictive accuracy of the model.
+| Variable           | Min      | 1st Qu. | Median | Mean   | 3rd Qu. | Max         |
+|-------------------|----------|---------|--------|--------|---------|-------------|
+| DAMAGE_CROPS_NUM  | 0        | 0       | 0      | 12,044 | 0       | 100,000,000 |
+| MAGNITUDE         | 0.00     | 1.00    | 50.00  | 32.91  | 52.00   | 109.00      |
+| BEGIN_LAT         | 17.73    | 34.32   | 38.93  | 38.11  | 41.80   | 49.00       |
+| BEGIN_LON         | -124.34  | -97.81  | -90.50 | -90.48 | -82.49  | -64.78      |
+| LOG_DAMAGE_CROPS  | 0.0000   | 0.0000  | 0.0000 | 0.2417 | 0.0000  | 18.4207     |
 
-3. Cross-Validation:
-10-fold cross-validation will be used to assess model stability and performance. This technique will divide the training dataset into 10 subsets, training the model on 9 subsets and testing on the remaining 1 subset, rotating this process to ensure each subset is used for validation. The cross-validation mean squared error (MSE) will be calculated at each step to identify the best subset of predictor variables.
+The dominance of zero values limits the performance of traditional linear models.
+
+### Multivariate Regression
+
+- **MAGNITUDE**: β = -0.0014 (*p* < 0.001)  
+- **BEGIN_LAT**: β = 0.0209 (*p* < 0.001)  
+- **BEGIN_LON**: β = 0.0039 (*p* < 0.001)  
+- **Model F-statistic**: 110.8 (*p* < 2.2e-16)  
+- **Adjusted R²**: 0.0055  
+- **Residual Std. Error**: 1.501  
+
+Despite statistical significance, effect sizes are small and explain very little variance.
+
+### Predictive Accuracy
+
+- **RMSE**: 1.4965  
+- **R² (Test Set)**: 0.005  
+- **MSE (Test Set)**: 2.2397  
+
+This underscores the limited utility of the current predictors in accurately forecasting crop damage.
+
+---
+
+## Interpretation and Implications
+
+Although some predictors are statistically associated with crop damage, they are not practically useful for prediction. Potential reasons include:
+
+- **Missing Variables**: Absence of key predictors like crop type, soil condition, and precipitation.
+- **Zero Inflation**: Prevalence of zero values in the response variable complicates modeling.
+- **Geospatial Complexity**: Nonlinear and region-specific interactions not captured by linear regression.
+
+---
+
+## Recommendations for Future Work
+
+- Use zero-inflated or hurdle models to manage the excess of zero values.
+- Incorporate additional features (e.g., crop type, real-time climate data).
+- Apply non-linear or ensemble models (e.g., random forests, gradient boosting).
+- Evaluate event-type specific models to capture differential impacts.
