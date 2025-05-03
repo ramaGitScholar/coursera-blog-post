@@ -107,6 +107,10 @@ The dominance of zero values limits the performance of traditional linear models
 
 ### Multivariate Regression
 
+![magnitude vs log damage crops](./magnitude.png)
+![latitude vs log damage crops](./latitude.png)
+![longitude vs log damage crops](./longitude.png)
+
 - **MAGNITUDE**: β = -0.0014 (*p* < 0.001)  
 - **BEGIN_LAT**: β = 0.0209 (*p* < 0.001)  
 - **BEGIN_LON**: β = 0.0039 (*p* < 0.001)  
